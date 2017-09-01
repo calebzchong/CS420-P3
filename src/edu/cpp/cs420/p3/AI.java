@@ -27,4 +27,54 @@ public class AI {
 	private void min(State state, int currentDepth, int maxDepth ){
 		
 	}
+        
+	// Only works for non-terminal states
+        private int evaluateState(State state) {
+            int SIZE = state.getSize(), previousMark, counter;
+            int[][] grid = state.getState();
+            int[] x = {0,0,0};
+            int[] o = {0,0,0};
+            
+            // check horizontals
+            for ( int row = 0; row < SIZE; row++){
+			counter = 1;
+                        previousMark = grid[row][0];
+			for ( int col = 1; col < SIZE; col++ ){
+                            
+                            if(previousMark != 0 && previousMark == grid[row][col]) {
+                                counter++;
+                                if(col == SIZE - 1 && previousMark == 1) 
+                                    x[counter - 1]++;
+                                else if(col == SIZE - 1 && previousMark == 2)    
+                                    o[counter - 1]++;
+                            }
+                            else {
+                                if(previousMark == 1) 
+                                    x[counter - 1]++;
+                                else if(previousMark == 2)    
+                                    o[counter - 1]++;
+                                counter = 1;
+                            }
+                            previousMark = grid[row][col];
+			}
+		}
+		// Check verticals
+		for ( int col = 0; col < SIZE; col++ ){
+			counter = 0;
+			previousMark = grid[0][col];
+			for ( int row = 1; row < SIZE; row++ ){
+                                if(previousMark == 0)
+                                    break;
+				if ( grid[row][col] == previousMark ){
+					counter++;
+				} else {
+					previousMark = grid[row][col];
+					counter = 1;
+				}
+			}
+		}
+                
+                return (3*x[2] + 2*x[1] + x[0] - 3*o[2] + 2*o[1] + o[0]);
+        }
+
 }
