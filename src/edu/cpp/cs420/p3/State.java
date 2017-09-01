@@ -1,45 +1,63 @@
 package edu.cpp.cs420.p3;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class State {
 	
 	public static final int SIZE = 8;
 	private int[][] grid;
+	private int currentMark;
 	private String stringForm = null;
 	
 	public State(){
 		grid = new int[SIZE][SIZE];
+		this.currentMark = 1;
 	} 
 	
-	
-	private State(int[][] newGrid) {
+	private State(int[][] newGrid, int mark) {
 		if ( newGrid.length != SIZE || newGrid[0].length != SIZE ){
 			throw new RuntimeException("Invalid grid size.");
 		}
+		currentMark = mark;
 		grid = newGrid;
 	}
 	
-	public State mark( String coordinate, int mark ){
+	public State mark( String coordinate ){
 		if ( coordinate.length() != 2 || !Character.isAlphabetic(coordinate.charAt(0)) 
 				|| !Character.isDigit(coordinate.charAt(1)) ){
 			return null;
 		} else {
-			return mark( coordinate.charAt(0)-65, Integer.parseInt("" + coordinate.charAt(1))-1, mark);
+			return mark( coordinate.charAt(0)-65, Integer.parseInt("" + coordinate.charAt(1))-1);
 		}
 	}
 	
-	public State mark( int row, int col, int mark ){
+	public State mark( int row, int col ){
 		if ( grid[row][col] != 0 ){
 			return null;
-		} else if ( mark != 1 && mark != 2 ){
+		} else if ( currentMark != 1 && currentMark != 2 ){
 			throw new RuntimeException("Invalid mark.");
 		} else {
 			int[][] newGrid = grid.clone();
 			for ( int i = 0; i < SIZE; i++){
 				newGrid[i] = grid[i].clone();
 			}
-			newGrid[row][col] = mark;
-			return new State(newGrid);
+			newGrid[row][col] = currentMark;
+			int newMark = currentMark%2+1;
+			return new State(newGrid, newMark);
 		}
+	}
+	
+	public List<State> getSuccessors(){
+		List<State> successors = new ArrayList<State>();
+		for ( int row = 0; row < SIZE; row++ ){
+			for ( int col = 0; col < SIZE; col++ ){
+				if ( grid[row][col] == 0 ){
+					successors.add(this.mark(row, col));
+				}
+			}
+		}
+		return successors;
 	}
 	
 	public boolean terminalTest(){
@@ -77,7 +95,7 @@ public class State {
 		}
 		return false;
 	}
-
+	
 	public String toString(){
 		if ( stringForm == null ){
 			StringBuilder sb = new StringBuilder();
