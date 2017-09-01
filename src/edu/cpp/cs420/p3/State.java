@@ -1,4 +1,4 @@
-package edu.cpp.cs420.p3;
+package src.edu.cpp.cs420.p3;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,4 +122,8 @@ public class State {
 		return stringForm;
 	}
 	
+        public int[][] getState() {
+            return grid;
+        }
+        
 }
