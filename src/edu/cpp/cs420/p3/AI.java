@@ -1,8 +1,10 @@
 package edu.cpp.cs420.p3;
 
+import java.util.List;
+
 public class AI {
 
-	public State ids( State intialState, int timeOut){
+	public State makeMove( State intialState, int timeOut){
 		long startTime = System.currentTimeMillis();
 		long timeElapsed = 0;
 		int maxDepth = 1;
@@ -15,22 +17,59 @@ public class AI {
 	}
 
 	private State minimax(State initialState, int maxDepth) {
-		return max(initialState, 0, maxDepth);
+		int maxValue = Integer.MIN_VALUE;
+		State mostestBestestState = null;
+		List<State> successors = initialState.getSuccessors();
+		for ( int i = 0; i < successors.size(); i++){
+			State s = successors.get(i);
+			int value = max( s, Integer.MIN_VALUE, Integer.MAX_VALUE, maxDepth-1);
+			if ( value > maxValue ){
+				maxValue = value;
+				mostestBestestState = s;
+			}
+		}
+		return mostestBestestState;
 	}
 	
-	private void max(State state, int currentDepth, int maxDepth ){
-		if ( state.terminalTest() ){
-			
+	private int max(State state, int alpha, int beta, int depthRemaining ){
+		if ( depthRemaining == 0 || state.terminalTest() ){
+			return evaluateState(state);
+		} else {
+			int maxValue = Integer.MIN_VALUE;
+			List<State> successors = state.getSuccessors();
+			for ( int i = 0; i < successors.size(); i++){
+				int value = min(state, alpha, beta, depthRemaining-1);
+				maxValue = maxValue >= value ? maxValue : value;
+				if ( maxValue >= beta ){
+					return maxValue;
+				}
+				alpha = alpha >= maxValue ? alpha : maxValue;
+			}
+			return maxValue;
 		}
 	}
 	
-	private void min(State state, int currentDepth, int maxDepth ){
-		
+	private int min(State state, int alpha, int beta, int depthRemaining  ){
+		if ( depthRemaining == 0 || state.terminalTest() ){
+			return evaluateState(state);
+		} else {
+			int minValue = Integer.MAX_VALUE;
+			List<State> successors = state.getSuccessors();
+			for ( int i = 0; i < successors.size(); i++){
+				int value = max(state, alpha, beta, depthRemaining-1);
+				minValue = minValue <= value ? minValue : value;
+				if ( minValue <= alpha ){
+					return minValue;
+				}
+				beta = beta <= minValue ? beta : minValue;
+			}
+			return minValue;
+		}
 	}
         
 	// Only works for non-terminal states
         private int evaluateState(State state) {
-            int SIZE = state.getSize(), previousMark, counter;
+            int SIZE = State.SIZE, previousMark, counter;
             int[][] grid = state.getState();
             int[] x = {0,0,0};
             int[] o = {0,0,0};

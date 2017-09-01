@@ -32,11 +32,9 @@ public class State {
 		}
 	}
 	
-	public State mark( int row, int col ){
+	private State mark( int row, int col ){
 		if ( grid[row][col] != 0 ){
 			return null;
-		} else if ( currentMark != 1 && currentMark != 2 ){
-			throw new RuntimeException("Invalid mark.");
 		} else {
 			int[][] newGrid = grid.clone();
 			for ( int i = 0; i < SIZE; i++){
