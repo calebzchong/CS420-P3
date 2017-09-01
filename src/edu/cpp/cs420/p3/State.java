@@ -10,10 +10,10 @@ public class State {
 	private int currentMark;
 	private String stringForm = null;
 	
-	public State(){
+	public State( boolean playerTurn ){
 		grid = new int[SIZE][SIZE];
-		this.currentMark = 1;
-	} 
+		this.currentMark = playerTurn ? 2 : 1;
+	}
 	
 	private State(int[][] newGrid, int mark) {
 		if ( newGrid.length != SIZE || newGrid[0].length != SIZE ){

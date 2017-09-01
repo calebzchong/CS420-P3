@@ -30,7 +30,7 @@ public class AI {
 		}
 		return mostestBestestState;
 	}
-	
+
 	private int max(State state, int alpha, int beta, int depthRemaining ){
 		if ( depthRemaining == 0 || state.terminalTest() ){
 			return evaluateState(state);
@@ -48,7 +48,7 @@ public class AI {
 			return maxValue;
 		}
 	}
-	
+
 	private int min(State state, int alpha, int beta, int depthRemaining  ){
 		if ( depthRemaining == 0 || state.terminalTest() ){
 			return evaluateState(state);
@@ -66,35 +66,35 @@ public class AI {
 			return minValue;
 		}
 	}
-        
+
 	// Only works for non-terminal states
-        private int evaluateState(State state) {
-            int SIZE = State.SIZE, previousMark, counter;
-            int[][] grid = state.getState();
-            int[] x = {0,0,0};
-            int[] o = {0,0,0};
-            
-            // check horizontals
-            for ( int row = 0; row < SIZE; row++){
+	private int evaluateState(State state) {
+		int SIZE = State.SIZE, previousMark, counter;
+		int[][] grid = state.getState();
+		int[] x = {0,0,0};
+		int[] o = {0,0,0};
+
+		// check horizontals
+		for ( int row = 0; row < SIZE; row++){
 			counter = 1;
-                        previousMark = grid[row][0];
+			previousMark = grid[row][0];
 			for ( int col = 1; col < SIZE; col++ ){
-                            
-                            if(previousMark != 0 && previousMark == grid[row][col]) {
-                                counter++;
-                                if(col == SIZE - 1 && previousMark == 1) 
-                                    x[counter - 1]++;
-                                else if(col == SIZE - 1 && previousMark == 2)    
-                                    o[counter - 1]++;
-                            }
-                            else {
-                                if(previousMark == 1) 
-                                    x[counter - 1]++;
-                                else if(previousMark == 2)    
-                                    o[counter - 1]++;
-                                counter = 1;
-                            }
-                            previousMark = grid[row][col];
+
+				if(previousMark != 0 && previousMark == grid[row][col]) {
+					counter++;
+					if(col == SIZE - 1 && previousMark == 1) 
+						x[counter - 1]++;
+					else if(col == SIZE - 1 && previousMark == 2)    
+						o[counter - 1]++;
+				}
+				else {
+					if(previousMark == 1) 
+						x[counter - 1]++;
+					else if(previousMark == 2)    
+						o[counter - 1]++;
+					counter = 1;
+				}
+				previousMark = grid[row][col];
 			}
 		}
 		// Check verticals
@@ -102,8 +102,8 @@ public class AI {
 			counter = 0;
 			previousMark = grid[0][col];
 			for ( int row = 1; row < SIZE; row++ ){
-                                if(previousMark == 0)
-                                    break;
+				if(previousMark == 0)
+					break;
 				if ( grid[row][col] == previousMark ){
 					counter++;
 				} else {
@@ -112,8 +112,8 @@ public class AI {
 				}
 			}
 		}
-                
-                return (3*x[2] + 2*x[1] + x[0] - 3*o[2] + 2*o[1] + o[0]);
-        }
+
+		return (3*x[2] + 2*x[1] + x[0] - 3*o[2] + 2*o[1] + o[0]);
+	}
 
 }

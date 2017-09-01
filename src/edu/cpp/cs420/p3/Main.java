@@ -12,8 +12,8 @@ public class Main {
 		ai = new AI();
 		boolean play = true;
 		while ( play ){
-			State currentState = new State();
 			boolean playerTurn = getYesNo("Would you like to go first (y/n)? ");
+			State currentState = new State(playerTurn);
 			System.out.print("How long should the computer think about its moves (in seconds)? ");
 			int timeOut = Integer.parseInt(kb.nextLine());
 			System.out.println(currentState);
