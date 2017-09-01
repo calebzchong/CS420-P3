@@ -1,4 +1,4 @@
-package edu.cpp.cs420.p2;
+package edu.cpp.cs420.p3;
 
 public class Main {
 
