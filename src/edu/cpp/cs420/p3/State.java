@@ -28,7 +28,7 @@ public class State {
 				|| !Character.isDigit(coordinate.charAt(1)) ){
 			return null;
 		} else {
-			return mark( coordinate.charAt(0)-65, Integer.parseInt("" + coordinate.charAt(1))-1);
+			return mark( Character.toUpperCase(coordinate.charAt(0))-65, Integer.parseInt("" + coordinate.charAt(1))-1);
 		}
 	}
 	
