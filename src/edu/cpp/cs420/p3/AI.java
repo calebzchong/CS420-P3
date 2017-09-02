@@ -4,16 +4,6 @@ import java.util.List;
 
 public class AI {
 
-	private static final int[][] evalValues = {
-		{ 2, 3,  4,  5,  5, 4, 3, 2}, 
-		{ 3, 4,  5,  6,  6, 5, 4, 3},
-		{ 4, 5,  6,  7,  7, 6, 5, 4}, 
-		{ 5, 6,  7,  8,  8, 7, 6, 5},
-		{ 5, 6,  7,  8,  8, 7, 6, 5},
-		{ 4, 5,  6,  7,  7, 6, 5, 4},
-		{ 3, 4,  5,  6,  6, 5, 4, 3},
-		{ 2, 3,  4,  5,  5, 4, 3, 2}};
-
 	public State makeMove( State intialState, int timeOut){
 		long startTime = System.currentTimeMillis();
 		long timeElapsed = 0;
@@ -81,6 +71,7 @@ public class AI {
 		int SIZE = State.SIZE;
 		int[][] grid = state.getState();
 		int[][] scores = new int[2][4];
+		int eval = 0;
 
 		// check horizontals
 		for ( int row = 0; row < SIZE; row++){
@@ -158,19 +149,47 @@ public class AI {
 				}
 			}
 		}
-//		System.out.println("X SCORES");
-//		System.out.println("Ones: " + scores[0][0]);
-//		System.out.println("twos: " + scores[0][1]);
-//		System.out.println("Threes: " + scores[0][2]);
-//		System.out.println("fours: " + scores[0][3]);
-//		System.out.println("O SCORES");
-//		System.out.println("Ones: " + scores[1][0]);
-//		System.out.println("twos: " + scores[1][1]);
-//		System.out.println("Threes: " + scores[1][2]);
-//		System.out.println("fours: " + scores[1][3]);
-		int evaluationScore = ( 1*scores[0][0] + 2*scores[0][1] + 5*scores[0][2] + 10*scores[0][3]
-							  - 1*scores[1][0] - 2*scores[1][1] - 5*scores[1][2] - 10*scores[1][3] );
+
+		for(int row = 0; row < SIZE; row++) {
+			for(int col = 0; col < SIZE - 4; col ++) {
+				int pos1 = grid[row][col];
+				int pos2 = grid[row][col+1];
+				int pos3 = grid[row][col+2];
+				int pos4 = grid[row][col+3];
+				eval += evaluate( pos1, pos2, pos3, pos4);
+			}
+		}
+
+		for(int col = 0; col < SIZE; col ++) {
+			for(int row = 0; row < SIZE - 4; row++) {
+
+				int pos1 = grid[row][col];
+				int pos2 = grid[row+1][col];
+				int pos3 = grid[row+2][col];
+				int pos4 = grid[row+3][col];
+				eval += evaluate( pos1, pos2, pos3, pos4);
+			}
+		}
+
+		int evaluationScore = eval
+				+ 10*scores[0][0] + 20*scores[0][1] + 50*scores[0][2] + 150*scores[0][3]
+						- 10*scores[1][0] - 20*scores[1][1] - 50*scores[1][2] - 150*scores[1][3];
 		return evaluationScore;
+	}
+	
+	private int evaluate( int pos1, int pos2, int pos3, int pos4) {
+		int eval = 0;
+		if(pos1 == 0 && pos4 == 1 && pos1 == 1 && pos4 == 0) // -XX-
+            eval += 60;
+        else if(pos1 == 0 && pos4 == 2 && pos1 == 2 && pos4 == 0) // -00-
+            eval -= 60;
+        else if((pos1 == 1 && pos2 == 2 && pos3 == 2 && pos4 == 0) || // XOO-
+                (pos1 == 0 && pos2 == 2 && pos3 == 2 && pos4 == 1))   // -OOX
+            eval += 60;
+        else if((pos1 == 2 && pos2 == 1 && pos3 == 1 && pos4 == 0) || // OXX-
+                (pos1 == 0 && pos2 == 1 && pos3 == 1 && pos4 == 2))   // -XXO
+            eval -= 60;
+		return eval;
 	}
 
 }
